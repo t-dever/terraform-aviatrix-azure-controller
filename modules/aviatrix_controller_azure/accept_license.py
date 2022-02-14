@@ -14,6 +14,7 @@ def accept_license():
             "--urn",
             "aviatrix-systems:aviatrix-bundle-payg:aviatrix-enterprise-bundle-byol:latest",
         ],
+        shell = True,
         stdout=subprocess.PIPE,
     )
 
@@ -30,6 +31,7 @@ def get_license_details():
             "--urn",
             "aviatrix-systems:aviatrix-bundle-payg:aviatrix-enterprise-bundle-byol:latest",
         ],
+        shell = True,
         stdout=subprocess.PIPE,
     )
     out = process.communicate()[0]
