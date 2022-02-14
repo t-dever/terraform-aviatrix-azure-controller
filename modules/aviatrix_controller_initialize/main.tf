@@ -13,18 +13,25 @@ terraform {
 }
 
 locals {
-  option = format("%s/aviatrix_controller_init.py",
-    var.terraform_module_path == "" ? path.module : format("%s/%s", var.terraform_module_path, "aviatrix_controller_initialize")
-  )
-  argument = format("'%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s' '%s'",
-    var.avx_controller_public_ip, var.avx_controller_private_ip, var.avx_controller_admin_email,
-    var.avx_controller_admin_password, var.arm_subscription_id, var.arm_application_id,
-    var.arm_application_key, var.directory_id, var.account_email, var.access_account_name,
-    var.aviatrix_customer_id, var.controller_version
-  )
+  terraform_module_path = var.terraform_module_path == "" ? path.module : "${var.terraform_module_path}/aviatrix_controller_initialize"
 }
 resource "null_resource" "run_script" {
   provisioner "local-exec" {
-    command = "python3 -W ignore ${local.option} ${local.argument}"
+    command = "python3 -W ignore ${local.terraform_module_path}/aviatrix_controller_init.py"
+    environment = {
+      HOSTNAME = var.avx_controller_public_ip
+      ADMIN_EMAIL = var.avx_controller_admin_email
+      NEW_ADMIN_PASSWORD = var.avx_controller_admin_password
+      ARM_SUBSCRIPTION_ID = var.arm_subscription_id
+      ARM_APPLICATION_CLIENT_ID = var.arm_application_id
+      ARM_APPLICATION_CLIENT_SECRET = var.arm_application_key
+      DIRECTORY_TENANT_ID = var.directory_id
+      ACCOUNT_EMAIL = var.account_email
+      ACCESS_ACCOUNT_NAME = var.access_account_name
+      AVIATRIX_CUSTOMER_ID = var.aviatrix_customer_id
+      CONTROLLER_VERSION = var.controller_version
+      SCALESET_NAME = var.avx_controller_name
+      RESOURCE_GROUP_NAME = var.resource_group_name
+     }
   }
 }
