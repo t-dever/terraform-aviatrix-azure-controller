@@ -20,6 +20,7 @@ resource "null_resource" "run_script" {
     command = "python3 -W ignore ${local.terraform_module_path}/aviatrix_controller_init.py"
     environment = {
       HOSTNAME = var.avx_controller_public_ip
+      PRIVATE_IP = var.avx_controller_private_ip
       ADMIN_EMAIL = var.avx_controller_admin_email
       NEW_ADMIN_PASSWORD = var.avx_controller_admin_password
       ARM_SUBSCRIPTION_ID = var.arm_subscription_id
@@ -30,8 +31,6 @@ resource "null_resource" "run_script" {
       ACCESS_ACCOUNT_NAME = var.access_account_name
       AVIATRIX_CUSTOMER_ID = var.aviatrix_customer_id
       CONTROLLER_VERSION = var.controller_version
-      SCALESET_NAME = var.avx_controller_name
-      RESOURCE_GROUP_NAME = var.resource_group_name
      }
   }
 }
